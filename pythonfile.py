@@ -1,44 +1,141 @@
-import random
-import time
+import  random
 
-def mostrarIntroduccion():
-    print('Estás en una tierra llena de dragones. Frente a tí')
-    print('hay dos cuevas. En una deellas, el dragón es generoso y')
-    print('amigable y compartirá su tesoro contigo. El otro dragón')
-    print('es codicioso y está hambriento, y te devorará inmediatamente.')
+IMAGENES_AHORCADO = [''' 
+
++----+
+|    |
+O    |
+     |
+     |
+     |
+====== ''','''
++----+
+|    |
+O    |
+|    |
+     |
+     |
+====== ''','''
+                     
+ +----+
+ |    |
+ O    |
+/|    |
+      |
+      |
+====== ''','''
+
+ +----+
+ |    |
+ O    |
+/|\   |
+      |
+      |
+====== ''','''
+
++----+
+ |    |
+ O    |
+/|\   |
+/     |
+      |
+====== ''','''
+
++----+
+ |    |
+ O    |
+/|\   |
+/ \   |
+      |
+====== ''']
+
+palabras = 'hormiga babuino tejon murcielago oso castor camello ' \
+           'gato almeja cobra pantera coyote cuervo ciervo perro ' \
+           'burro pato aguila huron zorro rana cabra ganso halcon ' \
+           'leon lagarto llama topo mono alce raton mula salamandra ' \
+           'nutria buho panda loro paloma piton conejo carnero ' \
+           'rata cuervo rinoceronte salmon foca tiburon oveja ' \
+           'mofeta perezoso serpiente araña cigüeña cisne tigre ' \
+           'sapo trucha pavo tortuga comadreja ballena ' \
+           'lobo wombat cebra'.split()
+
+
+def Obtenerpalabraalazar(listadepalabras):
+    indicedepalabras = random.randint(0, len(listadepalabras)-1)
+    return listadepalabras[indicedepalabras]
+
+
+def mostrartablero(IMAGENES_AHORCADO, letrasincorrectas, letrascorrectas, palabrasecreta):
+    print(IMAGENES_AHORCADO[len(letrasincorrectas)])
     print()
 
-def elegirCueva():
-    cueva = ""
-    while cueva != "1" and cueva != "2":
-        print("puerta que quieres entrar?(1 o 2)")
-        cueva = input()
-    return cueva
+    print("letras incorrectas:", end= " " )
+    for letra in letrasincorrectas:
+        print(letra, end = " ")
+        print()
+    espaciosvacios = "" * len(palabrassecreta)
 
+    for i in range(len(palabrasecreta)):
+        if palabrasecreta[i] in letrascorrectas:
+            espaciosvacios = espaciosvacios[:i] + palabrasecreta[i] + espaciosvacios = espaciosvacios[i + 1:]
 
-def explorarcueva(cuevaElegida):
-    print("Te acercas a la cueva....")
-    time.sleep(2)
-    print("Es oscura y espeluznante")
-    time.sleep(2)
-    print("Un gran dragon  aparece subitamente frente a ti! Abre su Boca")
-    print()
-    time.sleep(2)
+    for letra in espaciosvacios:
+        print(letra, end="")
+        print()
 
-    cuevaAmigable = random.randint(1,2)
+def obtenerIntento(letrasProbadas):
+    while True:
+        print("adivina una letra")
+        intento = input()
+        intento = intento.lower()
+        if len(intento) !=1:
+            print("Por favor introduce una letra")
+        elif intento in letrasprobadas:
+            print("ya has probado esa letra, prueba otra!! ")
+        elif intento not  in "abcdefghijklmnñopqrstuvwxyz":
+            print("por favor ingresa  una letra")
+        else:
+            return intento
+    def jugardenuevo():
+        print("Quieres jugar de nuevo? (si /no)")
+        return input().lower().startswith('s')
 
-    if cuevaElegida ==str(cuevaAmigable):
-        print("Te regala su tesoro")
-    else:
-        print("Te come de un solo bocado")
+    print("A H O R C A D O")
+    letrasincorrectas = ""
+    letrascorrectas =""
+    palabrasecreta =  obtenerpalabraalazar(words)
+    juegoterminado = False
 
+while True:
+    mostrarTablero(IMAGENES_AHORCADO,letrasincorrectas,letrascorrectas,palabras)
+    intento = obtenerintento(letrasincorrectas + letrascorrectas)
 
-jugardeNuevo = 'si'
-while jugardeNuevo == 'si' or jugardeNuevo == "s":
-    mostrarIntroduccion()
-    numerodecueva = elegirCueva()
-    explorarcueva(numerodecueva)
-    print("Quiere jugar de nuevo(si,no)")
-    jugardeNuevo = input()
+    if intento in palabraSecreta:
+        letrasCorrectas = letrasCorrectas + intento
+
+encontradoTodasLasLetras = True
+for i in range(len(palabraSecreta)):
+    if palabraSecreta[i] not in letrasCorrectas:
+        encontradoTodasLasLetras = False
+        break
+        if encontradoTodasLasLetras:
+            print('¡Sí! ¡La palabra secreta es "' + palabraSecreta + '"! ¡Has ganado!')
+            juegoTerminado = True
+        else:
+            letrasIncorrectas = letrasIncorrectas + intento
+        if len(letrasIncorrectas) == len(IMÁGENES_AHORCADO) -1:
+            mostrarTablero(IMÁGENES_AHORCADO, letrasIncorrectas, letrasCorrectas, palabraSecreta)
+            print('¡Te has quedado sin intentos!\nDespués de ' + str(len(letrasIncorrectas)) + ' intentos fallidos y ' +
+                  str(len(letrasCorrectas)) + ' aciertos, la palabra era "' + palabraSecreta + '"')
+            juegoTerminado = True
+
+    if juegoTerminado:
+        if jugarDeNuevo():
+            letrasIncorrectas = ''
+            letrasCorrectas = ''
+            juegoTerminado = False
+            palabraSecreta = obtenerPalabraAlAzar(palabras)
+        else:
+            break
 
 
